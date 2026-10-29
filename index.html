@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folio for Mac</title>
+<meta name="description" content="Folio: a reader for PDF, EPUB and Word files on the Mac, with search by meaning in English and French.">
+<link rel="icon" href="icon.png">
+<style>
+  :root {
+    --bg: #f7f5f0; --card: #ffffff; --text: #1f1d1a; --muted: #6b665e; --line: #e4dfd5;
+    --accent: #2f5d8a; --accent-text: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1b1a18; --card: #24221f; --text: #ece8e1; --muted: #a39d93; --line: #38352f;
+            --accent: #7fa7d1; --accent-text: #14181d; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 56px 16px 64px; }
+  header { display: flex; align-items: center; gap: 20px; }
+  header img { width: 88px; height: 88px; }
+  h1 { font-size: 40px; margin: 0; letter-spacing: -0.02em; }
+  .tagline { margin: 2px 0 0; color: var(--muted); }
+  .download { margin: 36px 0 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+  .button { display: inline-block; background: var(--accent); color: var(--accent-text); text-decoration: none;
+            font-weight: 600; padding: 13px 26px; border-radius: 10px; }
+  .button:hover { filter: brightness(1.08); }
+  .meta { color: var(--muted); font-size: 15px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; margin-top: 28px; }
+  h2 { font-size: 19px; margin: 0 0 10px; }
+  ol, ul { margin: 0; padding-left: 22px; }
+  li + li { margin-top: 8px; }
+  .note { color: var(--muted); font-size: 15px; margin: 12px 0 0; }
+  footer { color: var(--muted); font-size: 14px; margin-top: 36px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icon.png" alt="">
+    <div>
+      <h1>Folio</h1>
+      <p class="tagline">A reader for PDF, EPUB and Word files on the Mac.</p>
+    </div>
+  </header>
+
+  <div class="download">
+    <a class="button" href="https://github.com/hdfinder-tech/folio-download/releases/latest/download/Folio.zip">Download Folio</a>
+    <span class="meta" id="release">For any Mac with macOS 13 (Ventura) or later.</span>
+  </div>
+
+  <section>
+    <h2>Opening it</h2>
+    <ol>
+      <li>Double-click the downloaded <b>Folio.zip</b>. Folio appears beside it, in Downloads.</li>
+      <li>Double-click <b>Folio</b>. Your Mac says it was downloaded from the internet; click <b>Open</b>. That’s the only time it asks.</li>
+      <li>Add your books with <b>Add Files…</b>, or drag them into the sidebar.</li>
+    </ol>
+    <p class="note">Folio can stay in Downloads; it doesn’t need to go in Applications. To keep it in the Dock, first drag it into any other folder of your own, such as Documents, then open it from there: the Mac runs an app it has just downloaded from a temporary copy, and a Dock icon for that copy stops working after a restart.</p>
+    <p class="note">Folio is signed by its developer and checked by Apple (notarized).</p>
+  </section>
+
+  <section>
+    <h2>What it does</h2>
+    <ul>
+      <li>Reads PDFs, EPUBs and Word documents, and reopens each where you left off.</li>
+      <li>Finds several words near each other, in any order, with accents and capitals ignored. Put a phrase in quotes to find it exactly.</li>
+      <li>Finds <b>related passages</b>: places close in meaning to what you search for, even in other words, in English and French. A question in English can find the answer in a French book.</li>
+      <li>Reads the words of scanned pages, so they can be searched too.</li>
+      <li>Copies from a PDF as clean paragraphs, with words broken across lines joined again.</li>
+    </ul>
+    <p class="note">Search by meaning runs entirely on your Mac. Nothing you read or search for is sent anywhere.</p>
+  </section>
+
+  <footer>About 450 MB, most of it the language model behind related passages. Runs natively on Apple-chip and Intel Macs.</footer>
+</main>
+<script>
+  // The latest version's number and date, from GitHub; the page reads fine without them.
+  fetch("https://api.github.com/repos/hdfinder-tech/folio-download/releases/latest")
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(rel => {
+      const zip = (rel.assets || []).find(a => a.name === "Folio.zip");
+      const date = new Date(rel.published_at).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+      const size = zip ? ` · ${Math.round(zip.size / 1e6)} MB` : "";
+      document.getElementById("release").textContent =
+        `Version ${rel.tag_name.replace(/^v/, "")}, ${date}${size} · macOS 13 or later`;
+    })
+    .catch(() => {});
+</script>
+</body>
+</html>
